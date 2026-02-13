@@ -21,6 +21,7 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] Added in-memory generation store for previews (hackathon demo)
 - [x] Added export-to-zip for generated bad websites
 - [x] Verified `bun lint` and `bun typecheck` passing
+- [x] Made WWG UI intentionally worse: scanlines/flicker/low contrast, hover-instability, tooltip overload, nav “hover to unlock”, and a satirical consent doom banner
 
 ## Current Structure
 

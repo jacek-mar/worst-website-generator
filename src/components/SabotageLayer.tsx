@@ -10,6 +10,7 @@ export function SabotageLayer({
   totalChaos: number;
 }) {
   const [annoyingMessage, setAnnoyingMessage] = useState<string | null>(null);
+  const [consentOpen, setConsentOpen] = useState(false);
   const pending = useRef<number | null>(null);
   const chaos = useMemo(() => Math.max(0, Math.min(10, totalChaos)), [totalChaos]);
 
@@ -30,6 +31,15 @@ export function SabotageLayer({
       }
     }, 2500);
     return () => window.clearInterval(id);
+  }, [chaos]);
+
+  useEffect(() => {
+    // Fake consent banner that appears when you least need it.
+    if (chaos < 6) return;
+    const id = window.setTimeout(() => {
+      setConsentOpen(true);
+    }, 1600);
+    return () => window.clearTimeout(id);
   }, [chaos]);
 
   useEffect(() => {
@@ -100,12 +110,51 @@ export function SabotageLayer({
 
   if (!annoyingMessage) return null;
   return (
-    <div className="fixed left-3 top-3 z-50 w-[min(92vw,520px)]">
-      <div className="wwg-card wwg-animate p-3 text-sm">
-        {annoyingMessage}
-        <div className="mt-1 text-xs italic">(this message is both urgent and irrelevant)</div>
+    <>
+      <div className="fixed left-3 top-3 z-50 w-[min(92vw,520px)]">
+        <div className="wwg-card wwg-animate p-3 text-sm">
+          {annoyingMessage}
+          <div className="mt-1 text-xs italic">(this message is both urgent and irrelevant)</div>
+        </div>
       </div>
-    </div>
+
+      {consentOpen ? (
+        <div className="fixed bottom-3 right-3 z-50 w-[min(92vw,560px)]">
+          <div className="wwg-card wwg-doom wwg-flicker p-3 text-sm">
+            <div className="font-black">Cookie Consent (Mandatory Optional)</div>
+            <p className="mt-1 text-xs">
+              We use cookies to improve your experience, worsen your experience, and to
+              remember that you forgot to consent.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                type="button"
+                data-sabotage="button"
+                className="wwg-btn"
+                onClick={() => setConsentOpen(false)}
+              >
+                Accept Refuse
+              </button>
+              <button
+                type="button"
+                data-sabotage="button"
+                className="wwg-btn"
+                onClick={() => setConsentOpen(false)}
+              >
+                Refuse Accept
+              </button>
+              <button
+                type="button"
+                data-sabotage="button"
+                className="wwg-btn"
+                onClick={() => setConsentOpen(false)}
+              >
+                More Options (Fewer)
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
-

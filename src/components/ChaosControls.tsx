@@ -24,13 +24,13 @@ function Slider({
   onChange: (n: number) => void;
 }) {
   return (
-    <div className="wwg-card p-3">
+    <div className="wwg-card p-3 wwg-tip" data-tip="This slider is both real and symbolic. Move it anyway.">
       <div className="flex items-center justify-between gap-2">
         <div className="font-black">{label}</div>
         <div className="text-xs">{value}/10</div>
       </div>
       <input
-        className="mt-2 w-full"
+        className="mt-2 w-full wwg-tilt"
         type="range"
         min={0}
         max={10}
@@ -72,6 +72,9 @@ export function ChaosControls() {
         <p className="mt-1 text-sm">
           Set your chaos seed for reproducible badness. Or don’t. It’s both.
         </p>
+        <div className="mt-2 wwg-doom p-2 text-xs font-black wwg-flicker">
+          System Health: CRITICALLY FINE • Time Remaining: ∞ minutes • Confidence: 3%
+        </div>
         <label className="mt-3 block text-sm font-bold">Chaos Seed</label>
         <input
           className="mt-1 w-full border-4 border-black bg-white/50 p-2"
@@ -118,7 +121,8 @@ export function ChaosControls() {
       <button
         type="button"
         data-sabotage="button"
-        className="wwg-btn wwg-animate"
+        className="wwg-btn wwg-animate wwg-tip"
+        data-tip="This button may move, delay, or emotionally manipulate you."
         onClick={onGenerate}
         disabled={busy}
       >
@@ -127,4 +131,3 @@ export function ChaosControls() {
     </div>
   );
 }
-

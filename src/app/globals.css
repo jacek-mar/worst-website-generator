@@ -7,20 +7,59 @@
 
 :root {
   --wwg-rot: -1.2deg;
+  --wwg-tilt: 1.7deg;
+  --wwg-noise: rgba(0, 0, 0, 0.08);
 }
 
 body {
-  background: repeating-linear-gradient(
-    45deg,
-    #00ffea,
-    #00ffea 10px,
-    #ff00f7 10px,
-    #ff00f7 20px
-  );
-  color: rgba(0, 0, 0, 0.78);
-  font-family: var(--font-geist-sans), "Comic Sans MS", "Papyrus", system-ui,
-    sans-serif;
-  text-shadow: 0 0 10px rgba(255, 0, 247, 0.55);
+  /* Intentionally clashing neon + low-contrast + "doom" overlay */
+  background:
+    radial-gradient(circle at 10% 20%, rgba(247, 255, 0, 0.55), transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(255, 0, 247, 0.5), transparent 42%),
+    repeating-linear-gradient(
+      45deg,
+      #00ffea,
+      #00ffea 9px,
+      #ff00f7 9px,
+      #ff00f7 18px
+    );
+  color: rgba(10, 10, 10, 0.62);
+  font-family: var(--font-geist-sans), "Comic Sans MS", "Papyrus", "Impact",
+    "Courier New", system-ui, sans-serif;
+  text-shadow:
+    0 0 7px rgba(255, 0, 247, 0.55),
+    0 0 2px rgba(0, 255, 234, 0.65);
+  cursor: crosshair;
+  filter: saturate(1.35) contrast(0.85);
+}
+
+/* Subtle scanlines + flicker. It’s bad. It is also a "feature". */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.12),
+      rgba(0, 0, 0, 0.12) 1px,
+      rgba(255, 255, 255, 0) 3px,
+      rgba(255, 255, 255, 0) 6px
+    );
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  z-index: 9998;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.22));
+  opacity: 0.75;
+  z-index: 9997;
 }
 
 *::selection {
@@ -30,6 +69,10 @@ body {
 
 .wwg-wobble {
   transform: rotate(var(--wwg-rot));
+}
+
+.wwg-tilt {
+  transform: rotate(var(--wwg-tilt));
 }
 
 @keyframes wwg-shake {
@@ -54,24 +97,156 @@ body {
   animation: wwg-shake 1.2s infinite linear;
 }
 
+@keyframes wwg-flicker {
+  0% {
+    opacity: 0.94;
+    filter: hue-rotate(0deg);
+  }
+  35% {
+    opacity: 0.75;
+    filter: hue-rotate(7deg);
+  }
+  36% {
+    opacity: 0.98;
+    filter: hue-rotate(0deg);
+  }
+  82% {
+    opacity: 0.82;
+    filter: hue-rotate(-9deg);
+  }
+  100% {
+    opacity: 0.93;
+    filter: hue-rotate(0deg);
+  }
+}
+
+.wwg-flicker {
+  animation: wwg-flicker 2.8s infinite steps(2, end);
+}
+
+@keyframes wwg-marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-220%);
+  }
+}
+
+.wwg-marquee {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.wwg-marquee > span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: wwg-marquee 9s linear infinite;
+}
+
 .wwg-card {
   border: 5px dashed rgba(0, 0, 0, 0.75);
   background: rgba(255, 255, 255, 0.46);
   box-shadow:
     0 0 0 3px #ff0,
     0 0 28px rgba(0, 255, 234, 0.85);
+  backdrop-filter: blur(1.5px);
+}
+
+/* Layout instability on hover (but still readable-ish) */
+.wwg-card:hover {
+  transform: translate(2px, -3px) rotate(calc(var(--wwg-rot) * -0.3));
+  filter: blur(0.35px) saturate(1.25);
+}
+
+.wwg-card:active {
+  transform: translate(-3px, 2px) rotate(calc(var(--wwg-rot) * 0.8));
 }
 
 .wwg-btn {
   cursor: wait;
   border: 3px ridge #000;
   background: linear-gradient(90deg, #ff00f7, #00ffea);
-  color: rgba(0, 0, 0, 0.85);
+  color: rgba(0, 0, 0, 0.72);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.6rem 1rem;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
 }
 
 .wwg-btn:focus {
   outline: none;
+}
+
+.wwg-btn:hover {
+  filter: invert(0.12) hue-rotate(18deg) contrast(0.9);
+  transform: translate(1px, 1px) rotate(0.6deg);
+}
+
+.wwg-btn[disabled] {
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
+/* Nav that’s hidden until you accidentally hover the container. */
+.wwg-nav {
+  position: relative;
+}
+
+.wwg-nav .wwg-nav-items {
+  opacity: 0.13;
+  filter: blur(1.2px);
+  transition: opacity 180ms linear, filter 180ms linear;
+}
+
+.wwg-nav:hover .wwg-nav-items {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.wwg-nav::before {
+  content: "NAVIGATION (hover to unlock)";
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  margin-bottom: 6px;
+  transform: rotate(-1.2deg);
+}
+
+/* Tooltip overload */
+.wwg-tip {
+  position: relative;
+}
+
+.wwg-tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 6px;
+  width: min(320px, 90vw);
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 4px dotted rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(255, 0, 247, 0.55);
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(-4px) rotate(0.8deg);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.wwg-tip:hover::after {
+  opacity: 1;
+}
+
+/* Fake doom banner styles */
+.wwg-doom {
+  border: 6px double rgba(0, 0, 0, 0.85);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 0, 247, 0.22), rgba(255, 0, 247, 0.22) 8px, rgba(0, 255, 234, 0.22) 8px, rgba(0, 255, 234, 0.22) 16px),
+    rgba(255, 255, 255, 0.45);
 }

@@ -26,23 +26,42 @@ export function BadNav({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    // Sometimes reshuffle later to simulate “I swear it moved”.
+    if (navConfusion < 8) return;
+    const id = window.setInterval(() => {
+      if (Math.random() < 0.35) {
+        setShuffled((prev) => {
+          const copy = [...prev];
+          copy.reverse();
+          return copy;
+        });
+      }
+    }, 4200);
+    return () => window.clearInterval(id);
+  }, [navConfusion]);
+
   return (
-    <nav className="wwg-card wwg-wobble p-3">
-      <div className="flex flex-wrap gap-2">
+    <nav className="wwg-card wwg-nav wwg-wobble p-3">
+      <div className="wwg-nav-items flex flex-wrap gap-2">
         {shuffled.map((it, idx) => (
           <Link
             key={`${it.href}_${idx}`}
             href={it.href}
-            className="wwg-btn inline-block"
+            className="wwg-btn inline-block wwg-tip"
+            data-tip={`This link goes to: ${it.href}. Unless it doesn’t. (${idx + 1}/${shuffled.length})`}
             prefetch={false}
           >
             {it.label}
           </Link>
         ))}
       </div>
-      <p className="mt-2 text-xs italic">
-        Breadcrumb: /you/are/here/except/you/aren’t
+      <p className="mt-2 text-xs italic wwg-flicker">
+        Breadcrumb: /you/are/here/except/you/aren’t (refresh for new truth)
       </p>
+      <div className="mt-2 wwg-marquee text-xs font-black">
+        <span>breaking news: navigation is a mindset • click carefully • click loudly • click quietly •</span>
+      </div>
     </nav>
   );
 }
