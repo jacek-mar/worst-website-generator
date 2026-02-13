@@ -2,7 +2,7 @@
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Template Status**: ✅ Expanded into “Worst Website Generator” hackathon app
 
 The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
 
@@ -14,6 +14,13 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] ESLint configuration
 - [x] Memory bank documentation
 - [x] Recipe system for common features
+- [x] Implemented Worst Website Generator (WWG) pages: `/`, `/generator`, `/preview/[id]`
+- [x] Added seed-based “bad site” generator + palette generator
+- [x] Added satire-safe UX sabotage layer (delays, button dodge, occasional reverse scroll, noisy alerts)
+- [x] Added API routes: `POST /api/generate` and `POST /api/sabotage` (“Make It Worse”)
+- [x] Added in-memory generation store for previews (hackathon demo)
+- [x] Added export-to-zip for generated bad websites
+- [x] Verified `bun lint` and `bun typecheck` passing
 
 ## Current Structure
 
@@ -23,14 +30,21 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 | `src/app/layout.tsx` | Root layout | ✅ Ready |
 | `src/app/globals.css` | Global styles | ✅ Ready |
 | `.kilocode/` | AI context & recipes | ✅ Ready |
+| `src/app/generator/page.tsx` | Generator control panel (sliders + seed) | ✅ Added |
+| `src/app/preview/[id]/page.tsx` | Generated “bad site” preview | ✅ Added |
+| `src/app/api/generate/route.ts` | Create generation (seed + settings) | ✅ Added |
+| `src/app/api/sabotage/route.ts` | Escalate “badness” for an id | ✅ Added |
+| `src/lib/chaos.ts` | Deterministic RNG + content/palette generator | ✅ Added |
+| `src/lib/store.ts` | In-memory store (demo-only) | ✅ Added |
+| `src/components/*` | Bad nav + sabotage layer + preview UI | ✅ Added |
 
 ## Current Focus
 
-The template is ready. Next steps depend on user requirements:
+WWG is implemented as a hackathon-friendly demo. Next steps (if needed):
 
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+1. Persist generations (DB) instead of in-memory store
+2. Add more export templates (multi-page, assets)
+3. Add “modes” (mild → total collapse) and shareable URLs
 
 ## Quick Start Guide
 
@@ -85,3 +99,4 @@ export async function GET() {
 | Date | Changes |
 |------|---------|
 | Initial | Template created with base setup |
+| 2026-02-13 | Built Worst Website Generator: generator UI, seed-based preview, sabotage layer, APIs, zip export |
