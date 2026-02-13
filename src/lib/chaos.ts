@@ -43,6 +43,12 @@ export type GenerationSection = {
   disclaimer?: string;
 };
 
+export type NavPlacement = "top" | "left" | "right";
+export type HeroVariant = "banner" | "no-banner" | "split";
+export type FormVariant = "classic" | "short" | "wizard";
+export type BackgroundEffect = "scanlines" | "polka" | "checker" | "confetti";
+export type AnimationPreset = "shake" | "wobble" | "blink" | "floaty";
+
 export type Generation = {
   id: string;
   seed: number;
@@ -51,6 +57,24 @@ export type Generation = {
   settings: ChaosSettings;
   pageType: LandingPageType;
   pageTypeLabel: string;
+  navPlacement: NavPlacement;
+  heroVariant: HeroVariant;
+  formVariant: FormVariant;
+  backgroundEffect: BackgroundEffect;
+  animationPreset: AnimationPreset;
+  popupTrap?: {
+    enabled: boolean;
+    title: string;
+    body: string;
+    closeLabel: string;
+    closeDelayMs: number;
+    movesAway: boolean;
+  };
+  visitorCounter?: {
+    enabled: boolean;
+    label: string;
+    start: number;
+  };
   palette: Palette;
   title: string;
   subtitle: string;
@@ -93,6 +117,10 @@ export type Generation = {
     title: string;
     fields: Array<{ name: string; label: string; whyRequired: string; placeholder: string }>;
     captchaInstruction: string;
+    captcha: {
+      prompt: string;
+      expected: string;
+    };
   };
 };
 
@@ -256,6 +284,46 @@ export function generateWorstSite(
     href: pick(rng, hrefs),
   }));
 
+  // Layout + behavior variants (seeded per page). These drive visible differences.
+  const navPlacement: NavPlacement = pick(rng, ["top", "left", "right"]);
+  const heroVariant: HeroVariant = pick(rng, ["banner", "no-banner", "split"]);
+  const backgroundEffect: BackgroundEffect = pick(rng, [
+    "scanlines",
+    "polka",
+    "checker",
+    "confetti",
+  ]);
+  const animationPreset: AnimationPreset = pick(rng, ["shake", "wobble", "blink", "floaty"]);
+
+  const popupTrapEnabled = settings.navConfusion >= 6 ? rng() > 0.45 : rng() > 0.78;
+  const popupTrap = popupTrapEnabled
+    ? {
+        enabled: true,
+        title: weirdCaps(rng, pick(rng, ["IMPORTANT POPUP", "WAIT!", "Tiny Survey", "One-Time Offer (recurring)"])),
+        body: weirdCaps(
+          rng,
+          pick(rng, [
+            "Please close this window to continue. Also, continuing closes you.",
+            "This is not a scam. It is an experience.",
+            "By closing, you agree to open.",
+            "Your session is expiring in -3 seconds.",
+          ]),
+        ),
+        closeLabel: weirdCaps(rng, pick(rng, ["Close (maybe)", "X (emotionally)", "Dismiss / Accept", "Not Now (now)"])),
+        closeDelayMs: 900 + int(rng, 0, 2200) + settings.performanceNightmare * 140,
+        movesAway: settings.totalChaos >= 6 ? rng() > 0.35 : rng() > 0.7,
+      }
+    : undefined;
+
+  const visitorCounterEnabled = settings.visualPain >= 6 ? rng() > 0.45 : rng() > 0.75;
+  const visitorCounter = visitorCounterEnabled
+    ? {
+        enabled: true,
+        label: weirdCaps(rng, pick(rng, ["Visitors Online (probably)", "Human Beings Detected", "Hits Counter (not calories)"])),
+        start: int(rng, 12, 98456),
+      }
+    : undefined;
+
   const featuresCount = int(rng, 7, 12);
   const features: GenerationSection[] = Array.from({ length: featuresCount }, (_, i) => {
     const heading = weirdCaps(
@@ -309,7 +377,20 @@ export function generateWorstSite(
     ])),
   }));
 
-  const fieldCount = 20 + Math.max(0, settings.cognitiveOverload - 5);
+  // Form variety: sometimes fewer fields (mercifully), sometimes absurdly many.
+  const formVariant: FormVariant =
+    settings.cognitiveOverload >= 8
+      ? pick(rng, ["classic", "wizard", "wizard", "classic"])
+      : pick(rng, ["short", "classic", "wizard"]);
+
+  const baseFieldCount =
+    formVariant === "short"
+      ? int(rng, 6, 12)
+      : formVariant === "wizard"
+        ? int(rng, 10, 18)
+        : int(rng, 16, 30);
+
+  const fieldCount = Math.max(4, baseFieldCount + Math.max(0, settings.cognitiveOverload - 6));
   const fieldTopics = [
     "Email", "Password", "Password (again but different)", "Favorite number", "Least favorite color",
     "Name", "Name (legal)", "Name (spiritual)", "Social security? (jk)", "Mother’s maiden meme",
@@ -340,6 +421,19 @@ export function generateWorstSite(
     rng,
     `Captcha: please select all images containing "${pick(rng, ["uncertainty", "JPEG artifacts", "existential dread", "traffic cones (metaphorical)"])}" and then solve ${int(rng, 2, 4)} riddles you haven’t read yet.`,
   );
+
+  // Captcha that is "possible" but still annoying.
+  const aNum = int(rng, 2, 9);
+  const bNum = int(rng, 2, 9);
+  const op = pick(rng, ["+", "-", "x"] as const);
+  const expected = op === "+" ? String(aNum + bNum) : op === "-" ? String(aNum - bNum) : String(aNum * bNum);
+  const captcha = {
+    prompt: weirdCaps(
+      rng,
+      `Prove you are human: solve ${aNum} ${op} ${bNum}. Then DO NOT type the answer. Then type it anyway.`,
+    ),
+    expected,
+  };
 
   const palette = paletteFromSeed(seed, pageType);
 
@@ -454,6 +548,13 @@ export function generateWorstSite(
     settings,
     pageType,
     pageTypeLabel: typeLabel,
+    navPlacement,
+    heroVariant,
+    formVariant,
+    backgroundEffect,
+    animationPreset,
+    popupTrap,
+    visitorCounter,
     palette,
     title,
     subtitle,
@@ -478,6 +579,7 @@ export function generateWorstSite(
       title: weirdCaps(rng, "Register Now (or later, but now)"),
       fields: formFields,
       captchaInstruction,
+      captcha,
     },
   };
 }

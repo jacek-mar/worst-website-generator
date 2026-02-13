@@ -97,6 +97,66 @@ body::after {
   animation: wwg-shake 1.2s infinite linear;
 }
 
+/* Animation presets (so different generated pages can feel differently awful) */
+.wwg-anim-shake {
+  animation: wwg-shake 1.15s infinite linear;
+}
+
+@keyframes wwg-wobble {
+  0% {
+    transform: rotate(var(--wwg-rot)) translateY(0);
+  }
+  25% {
+    transform: rotate(calc(var(--wwg-rot) + 2.2deg)) translateY(-2px);
+  }
+  50% {
+    transform: rotate(calc(var(--wwg-rot) - 3.1deg)) translateY(3px);
+  }
+  75% {
+    transform: rotate(calc(var(--wwg-rot) + 1.1deg)) translateY(-1px);
+  }
+  100% {
+    transform: rotate(var(--wwg-rot)) translateY(0);
+  }
+}
+
+.wwg-anim-wobble {
+  animation: wwg-wobble 1.3s infinite linear;
+}
+
+@keyframes wwg-blink {
+  0%,
+  49% {
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  50%,
+  100% {
+    opacity: 0.22;
+    filter: hue-rotate(33deg);
+  }
+}
+
+.wwg-anim-blink {
+  animation: wwg-blink 0.95s infinite steps(2, end);
+}
+
+@keyframes wwg-floaty {
+  0% {
+    transform: translateY(0) rotate(calc(var(--wwg-rot) - 0.6deg));
+  }
+  50% {
+    transform: translateY(-7px) rotate(calc(var(--wwg-rot) + 1.1deg));
+  }
+  100% {
+    transform: translateY(0) rotate(calc(var(--wwg-rot) - 0.6deg));
+  }
+}
+
+.wwg-anim-floaty {
+  animation: wwg-floaty 1.65s infinite ease-in-out;
+}
+
 @keyframes wwg-flicker {
   0% {
     opacity: 0.94;

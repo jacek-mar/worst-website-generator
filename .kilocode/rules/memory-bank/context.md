@@ -26,6 +26,9 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] Added landing page type selector to generator UI and passed through `POST /api/generate`
 - [x] Varied generated page appearance per type (palette + retro-ish CSS gradients/animations) while keeping core flows working
 - [x] Updated preview + export-to-zip to reflect selected landing page type (type label + per-type sections)
+- [x] Added per-generation layout/UX variants: banner/no-banner/split hero, left/right/top navigation placement, popup trap, visitor counter, and form variants (classic/short/wizard)
+- [x] Added captcha challenge with deterministic expected answer + intentionally unfair pass rate (parody)
+- [x] Varied background effects + animation presets per generated page and threaded them through preview + export-to-zip
 
 ## Current Structure
 
@@ -106,3 +109,4 @@ export async function GET() {
 | Initial | Template created with base setup |
 | 2026-02-13 | Built Worst Website Generator: generator UI, seed-based preview, sabotage layer, APIs, zip export |
 | 2026-02-13 | Added landing page type selection (5 types) with type-specific “best worst” content/layout + palette variance and export support |
+| 2026-02-13 | Added per-page layout variants (hero/nav), popup trap, visitor counter, wizard/short forms with captcha, and per-page animation/background presets |
