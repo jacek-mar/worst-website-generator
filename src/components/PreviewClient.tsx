@@ -7,6 +7,8 @@ import type { Generation } from "@/lib/chaos";
 import { createRng } from "@/lib/chaos";
 import { SabotageLayer } from "@/components/SabotageLayer";
 import { BadNav } from "@/components/BadNav";
+import { BadIconStrip } from "@/components/BadIconStrip";
+import { badIconSvgString } from "@/lib/bad-icons";
 
 function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
@@ -142,6 +144,10 @@ export function PreviewClient({ generation }: { generation: Generation }) {
 body{font-family:Comic Sans MS, Papyrus, system-ui; background-image:${bgLayer}, ${generation.palette.background}; color:${generation.palette.text};}
 .card{border:5px dashed ${generation.palette.border}; padding:16px; margin:16px; background:rgba(255,255,255,.5)}
 .btn{display:inline-block; padding:10px 14px; border:3px ridge #000; background:${generation.palette.accentGradient}; color:#111; text-transform:uppercase; letter-spacing:.08em; cursor:wait}
+.iconbar{border:6px groove #000; background:rgba(255,255,255,.45); margin:16px; padding:10px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between}
+.iconlink{display:inline-flex; align-items:center; gap:8px; border:4px solid #000; background:rgba(255,255,255,.35); padding:6px 8px; text-decoration:none}
+.iconlabel{font-size:12px; font-weight:900; text-decoration:underline}
+.wwg-icon{filter:drop-shadow(0 0 10px rgba(0,255,234,.7)) drop-shadow(0 0 14px rgba(255,0,247,.6)); transform:rotate(-6deg); mix-blend-mode:multiply}
 @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:.2}}
 @keyframes wobble{0%{transform:rotate(-1deg) translateY(0)}25%{transform:rotate(2deg) translateY(-2px)}50%{transform:rotate(-3deg) translateY(2px)}75%{transform:rotate(1deg) translateY(-1px)}100%{transform:rotate(-1deg) translateY(0)}}
 @keyframes shake{0%{transform:translate(0,0) rotate(-1deg)}25%{transform:translate(1px,-2px) rotate(1deg)}50%{transform:translate(-2px,1px) rotate(-2deg)}75%{transform:translate(2px,2px) rotate(0deg)}100%{transform:translate(0,0) rotate(-1deg)}}
@@ -233,6 +239,18 @@ if(wizard){
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
+  <div class="iconbar ${animClassForExport}">
+    <div>
+      ${generation.iconLinks
+        .slice(0, 6)
+        .map((l) => {
+          const svg = badIconSvgString(l.name, generation.iconTheme, { size: 22, title: l.label });
+          return `<a class="iconlink" href="${escapeHtml(l.href)}">${svg}<span class="iconlabel">${escapeHtml(l.label)}</span></a>`;
+        })
+        .join("")}
+    </div>
+    <div class="small">Icon navigation: accurate-ish (icons sold separately)</div>
+  </div>
   <div class="layout" data-nav="${escapeHtml(navPlacement)}">
     <div class="navcol">
       <div class="card ${animClassForExport}">
@@ -468,6 +486,8 @@ if(wizard){
             : "mx-auto flex max-w-6xl flex-col gap-4 md:flex-row"
         }
       >
+        <BadIconStrip links={generation.iconLinks} theme={generation.iconTheme} />
+
         {generation.navPlacement === "top" ? (
           <BadNav items={generation.navItems} navConfusion={generation.settings.navConfusion} />
         ) : null}

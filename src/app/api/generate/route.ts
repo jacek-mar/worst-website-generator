@@ -4,6 +4,7 @@ import {
   normalizeLandingPageType,
   normalizeSettings,
   type ChaosSettings,
+  type IconTheme,
   type LandingPageType,
 } from "@/lib/chaos";
 import { putGeneration } from "@/lib/store";
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
       seed?: number;
       settings?: Partial<ChaosSettings>;
       pageType?: LandingPageType;
+      iconTheme?: Partial<IconTheme>;
     };
 
     const seed = Number.isFinite(body.seed)
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
     const pageType = normalizeLandingPageType(body.pageType);
     const id = makeId();
 
-    const gen = generateWorstSite(seed, settings, pageType);
+    const gen = generateWorstSite(seed, settings, pageType, { iconTheme: body.iconTheme });
     gen.id = id;
 
     putGeneration(gen);

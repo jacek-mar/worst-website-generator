@@ -29,6 +29,7 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] Added per-generation layout/UX variants: banner/no-banner/split hero, left/right/top navigation placement, popup trap, visitor counter, and form variants (classic/short/wizard)
 - [x] Added captcha challenge with deterministic expected answer + intentionally unfair pass rate (parody)
 - [x] Varied background effects + animation presets per generated page and threaded them through preview + export-to-zip
+- [x] Added linked inline-SVG **graphic icons** with **customizable (palette-matched) colors** to the generator UI and generated pages, including ZIP export support
 
 ## Current Structure
 
@@ -110,3 +111,4 @@ export async function GET() {
 | 2026-02-13 | Built Worst Website Generator: generator UI, seed-based preview, sabotage layer, APIs, zip export |
 | 2026-02-13 | Added landing page type selection (5 types) with type-specific “best worst” content/layout + palette variance and export support |
 | 2026-02-13 | Added per-page layout variants (hero/nav), popup trap, visitor counter, wizard/short forms with captcha, and per-page animation/background presets |
+| 2026-02-13 | Added icon strip + icon theme controls (auto palette-match + manual) and exported icons into generated ZIP HTML/CSS |

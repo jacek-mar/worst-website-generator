@@ -250,6 +250,15 @@ body::after {
   filter: grayscale(1);
 }
 
+/* Icons: garish, but still "palette-aligned" via theme props / CSS vars */
+.wwg-icon {
+  filter:
+    drop-shadow(0 0 10px rgba(0, 255, 234, 0.7))
+    drop-shadow(0 0 14px rgba(255, 0, 247, 0.6));
+  transform: rotate(-6deg);
+  mix-blend-mode: multiply;
+}
+
 /* Nav that’s hidden until you accidentally hover the container. */
 .wwg-nav {
   position: relative;

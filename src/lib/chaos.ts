@@ -36,6 +36,19 @@ export type Palette = {
   accentGradient: string;
 };
 
+export type IconTheme = {
+  primary: string;
+  secondary: string;
+};
+
+export type IconName = "skull" | "spark" | "maze" | "warning";
+
+export type IconLink = {
+  name: IconName;
+  label: string;
+  href: string;
+};
+
 export type GenerationSection = {
   heading: string;
   body: string;
@@ -76,6 +89,8 @@ export type Generation = {
     start: number;
   };
   palette: Palette;
+  iconTheme: IconTheme;
+  iconLinks: IconLink[];
   title: string;
   subtitle: string;
   heroBody: string;
@@ -123,6 +138,15 @@ export type Generation = {
     };
   };
 };
+
+function safeColor(input: unknown, fallback: string) {
+  const s = String(input ?? "").trim();
+  // Minimal safety: accept hex or CSS function-ish strings (keeps it hackathon-simple).
+  if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(s)) return s;
+  if (/^(rgb|hsl)a?\(/.test(s)) return s;
+  if (/^repeating-|^radial-|^linear-|^conic-/.test(s)) return s;
+  return fallback;
+}
 
 // Deterministic RNG (Mulberry32)
 export function createRng(seed: number) {
@@ -205,6 +229,9 @@ export function generateWorstSite(
   seed: number,
   settings: ChaosSettings,
   pageType: LandingPageType = "saas-trial",
+  overrides?: {
+    iconTheme?: Partial<IconTheme> | null;
+  },
 ): Generation {
   const rng = createRng(seed);
 
@@ -437,6 +464,25 @@ export function generateWorstSite(
 
   const palette = paletteFromSeed(seed, pageType);
 
+  // Icons: intentionally garish, but *palette-aligned* so the mismatch still feels "on brand".
+  const defaultIconTheme: IconTheme = {
+    primary: palette.button,
+    secondary: rng() > 0.5 ? palette.hover : palette.border,
+  };
+  const iconTheme: IconTheme = {
+    primary: safeColor(overrides?.iconTheme?.primary, defaultIconTheme.primary),
+    secondary: safeColor(overrides?.iconTheme?.secondary, defaultIconTheme.secondary),
+  };
+
+  const iconLinkPool: IconLink[] = [
+    { name: "warning", label: weirdCaps(rng, "Terms-ish"), href: "/#terms" },
+    { name: "maze", label: weirdCaps(rng, "Docs?"), href: "/generator#why" },
+    { name: "spark", label: weirdCaps(rng, "Inspiration"), href: "https://example.com" },
+    { name: "skull", label: weirdCaps(rng, "Support"), href: "/generator" },
+  ];
+  // Deterministically shuffle-ish (still confusing).
+  const iconLinks = [...iconLinkPool].sort(() => (rng() > 0.5 ? 1 : -1));
+
   const pricing =
     pageType === "saas-trial"
       ? {
@@ -556,6 +602,8 @@ export function generateWorstSite(
     popupTrap,
     visitorCounter,
     palette,
+    iconTheme,
+    iconLinks,
     title,
     subtitle,
     heroBody: weirdCaps(

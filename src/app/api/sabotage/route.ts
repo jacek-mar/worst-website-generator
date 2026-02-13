@@ -16,7 +16,9 @@ export async function POST(req: Request) {
     }
 
     const worsened = worsenSettings(current.settings);
-    const regen = generateWorstSite(current.seed, worsened, current.pageType);
+    const regen = generateWorstSite(current.seed, worsened, current.pageType, {
+      iconTheme: current.iconTheme,
+    });
     regen.id = current.id;
     regen.version = current.version + 1;
     regen.createdAt = current.createdAt;
