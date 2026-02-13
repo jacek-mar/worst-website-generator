@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { ChaosSettings } from "@/lib/chaos";
-import { normalizeSettings } from "@/lib/chaos";
+import type { ChaosSettings, LandingPageType } from "@/lib/chaos";
+import { LANDING_PAGE_TYPE_OPTIONS, normalizeLandingPageType, normalizeSettings } from "@/lib/chaos";
 
 const DEFAULTS: ChaosSettings = {
   visualPain: 7,
@@ -45,6 +45,7 @@ function Slider({
 export function ChaosControls() {
   const router = useRouter();
   const [seed, setSeed] = useState<string>(String(Math.floor(Date.now() % 1000000)));
+  const [pageType, setPageType] = useState<LandingPageType>("saas-trial");
   const [settings, setSettings] = useState<ChaosSettings>(DEFAULTS);
   const [busy, setBusy] = useState(false);
   const normalized = useMemo(() => normalizeSettings(settings), [settings]);
@@ -53,10 +54,15 @@ export function ChaosControls() {
     setBusy(true);
     try {
       const seedNumber = Number(seed);
+      const safeType = normalizeLandingPageType(pageType);
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ seed: Number.isFinite(seedNumber) ? seedNumber : undefined, settings: normalized }),
+        body: JSON.stringify({
+          seed: Number.isFinite(seedNumber) ? seedNumber : undefined,
+          settings: normalized,
+          pageType: safeType,
+        }),
       });
       const data = (await res.json()) as { id: string };
       router.push(`/preview/${data.id}`);
@@ -83,6 +89,22 @@ export function ChaosControls() {
           placeholder="874392"
         />
         <p className="mt-2 text-xs italic">Pro tip: a seed is like a vibe, but numeric.</p>
+
+        <label className="mt-4 block text-sm font-bold">Landing Page Type</label>
+        <select
+          className="mt-1 w-full border-4 border-black bg-white/50 p-2"
+          value={pageType}
+          onChange={(e) => setPageType(normalizeLandingPageType(e.target.value))}
+        >
+          {LANDING_PAGE_TYPE_OPTIONS.map((o) => (
+            <option key={o.type} value={o.type}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <p className="mt-2 text-xs italic">
+          Choose a niche so the generator can fail more specifically.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">

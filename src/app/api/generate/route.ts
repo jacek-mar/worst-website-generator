@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { generateWorstSite, normalizeSettings, type ChaosSettings } from "@/lib/chaos";
+import {
+  generateWorstSite,
+  normalizeLandingPageType,
+  normalizeSettings,
+  type ChaosSettings,
+  type LandingPageType,
+} from "@/lib/chaos";
 import { putGeneration } from "@/lib/store";
 
 function makeId() {
@@ -12,6 +18,7 @@ export async function POST(req: Request) {
     const body = (await req.json().catch(() => ({}))) as {
       seed?: number;
       settings?: Partial<ChaosSettings>;
+      pageType?: LandingPageType;
     };
 
     const seed = Number.isFinite(body.seed)
@@ -19,13 +26,14 @@ export async function POST(req: Request) {
       : Math.floor(Date.now() % 1000000);
 
     const settings = normalizeSettings(body.settings);
+    const pageType = normalizeLandingPageType(body.pageType);
     const id = makeId();
 
-    const gen = generateWorstSite(seed, settings);
+    const gen = generateWorstSite(seed, settings, pageType);
     gen.id = id;
 
     putGeneration(gen);
-    return NextResponse.json({ id, seed, settings });
+    return NextResponse.json({ id, seed, settings, pageType });
   } catch {
     return NextResponse.json(
       { error: "Generation failed (ironically)." },
@@ -33,4 +41,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

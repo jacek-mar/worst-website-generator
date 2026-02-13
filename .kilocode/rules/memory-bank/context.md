@@ -22,6 +22,10 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] Added export-to-zip for generated bad websites
 - [x] Verified `bun lint` and `bun typecheck` passing
 - [x] Made WWG UI intentionally worse: scanlines/flicker/low contrast, hover-instability, tooltip overload, nav “hover to unlock”, and a satirical consent doom banner
+- [x] Added 5 landing page types (SaaS trial, e-commerce, download training, AI service, local service) with per-type content/layout blocks
+- [x] Added landing page type selector to generator UI and passed through `POST /api/generate`
+- [x] Varied generated page appearance per type (palette + retro-ish CSS gradients/animations) while keeping core flows working
+- [x] Updated preview + export-to-zip to reflect selected landing page type (type label + per-type sections)
 
 ## Current Structure
 
@@ -101,3 +105,4 @@ export async function GET() {
 |------|---------|
 | Initial | Template created with base setup |
 | 2026-02-13 | Built Worst Website Generator: generator UI, seed-based preview, sabotage layer, APIs, zip export |
+| 2026-02-13 | Added landing page type selection (5 types) with type-specific “best worst” content/layout + palette variance and export support |

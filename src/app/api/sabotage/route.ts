@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     const worsened = worsenSettings(current.settings);
-    const regen = generateWorstSite(current.seed, worsened);
+    const regen = generateWorstSite(current.seed, worsened, current.pageType);
     regen.id = current.id;
     regen.version = current.version + 1;
     regen.createdAt = current.createdAt;
@@ -27,4 +27,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Sabotage failed successfully." }, { status: 500 });
   }
 }
-
