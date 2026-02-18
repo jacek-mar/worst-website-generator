@@ -30,6 +30,7 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] Added captcha challenge with deterministic expected answer + intentionally unfair pass rate (parody)
 - [x] Varied background effects + animation presets per generated page and threaded them through preview + export-to-zip
 - [x] Added linked inline-SVG **graphic icons** with **customizable (palette-matched) colors** to the generator UI and generated pages, including ZIP export support
+- [x] Added GitHub repository link to main app page
 
 ## Current Structure
 

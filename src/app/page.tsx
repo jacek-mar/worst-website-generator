@@ -5,7 +5,7 @@ export default function Home() {
     <main className="min-h-screen p-6">
       <div className="wwg-card wwg-wobble mx-auto max-w-3xl p-6">
         <h1 className="wwg-animate text-4xl font-black">Worst Website Generator</h1>
-        <h1 className="mt-2 text-xl font-semibold">(yes, TWO H1s. you’re welcome)</h1>
+        <h1 className="mt-2 text-xl font-semibold">(yes, TWO H1s. you&apos;re welcome)</h1>
 
         <p className="mt-4 leading-relaxed">
           This app is intentionally bad. It generates websites that are equally bad.
@@ -28,7 +28,18 @@ export default function Home() {
         </p>
 
         <p className="mt-3 text-xs italic">
-          “If you can read this, your contrast is too high.”
+          &quot;If you can read this, your contrast is too high.&quot;
+        </p>
+
+        <p className="mt-4 text-center text-sm">
+          <a
+            href="https://github.com/jacek-mar/worst-website-generator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:no-underline"
+          >
+            View on GitHub
+          </a>
         </p>
       </div>
     </main>
