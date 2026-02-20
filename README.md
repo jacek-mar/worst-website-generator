@@ -4,14 +4,6 @@
 
 **🕹️ Live demo:** https://quiet-helm-1614.d.kiloapps.io/
 
-[![MIT License](https://img.shields.io/badge/license-MIT-00FF41?style=flat-square&logo=opensourceinitiative&logoColor=black)](LICENSE)
-[![Next.js 16](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Built with KiloCode](https://img.shields.io/badge/Built%20with-KiloCode-blueviolet?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4=)](https://kilo.ai/appbuilder)
-[![Vibe-coded](https://img.shields.io/badge/100%25-vibe--coded-FF00FF?style=flat-square)](https://kilo.ai)
-[![500+ AI Models](https://img.shields.io/badge/AI%20models-500%2B-00FFFF?style=flat-square)](https://kilo.ai/appbuilder)
-
 ---
 
 ## 🤔 What is this?
