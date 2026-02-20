@@ -1,6 +1,7 @@
 # 🎨 Worst Website Generator — Designer's Nightmare Edition
 
 > *"A landing page generator built by someone who learned web design yesterday but had too much confidence."*
+<img width="1200" height="593" alt="wwgv1" src="https://github.com/user-attachments/assets/db6c525b-8336-4334-a474-860baeb32172" />
 
 **🕹️ Live demo:** https://quiet-helm-1614.d.kiloapps.io/
 
