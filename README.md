@@ -323,7 +323,7 @@ caused by exposure to the color scheme.
 
 ## 👤 Author
 
-**Your Name** — <[jacek mar](https://github.com/jacek-mar)>
+**Jacek** — <[jacek mar](https://github.com/jacek-mar)>
 
 *Built with [KiloCode App Builder](https://kilo.ai/appbuilder) using
 MiniMax M2.5, with human oversight and a healthy appreciation
